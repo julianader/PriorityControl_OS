@@ -1,0 +1,118 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    width: 90%;
+    max-width: 1200px;
+    text-align: center;
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: bold;
+    font-size: 2em;
+    text-transform: uppercase;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#search-input {
+    padding: 10px;
+    width: 80%;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.process-list {
+    width: 100%;
+    height: 500px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    font-family: monospace;
+    background-color: #f9f9f9;
+    color: #333;
+    overflow-y: auto;
+}
+
+.process-item {
+    padding: 10px;
+    margin: 5px 0;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.process-item:hover {
+    background-color: #f1f1f1;
+}
+
+.process-item.selected {
+    background-color: #007bff;
+    color: white;
+}
+
+label, select {
+    margin: 10px 0;
+}
+
+.btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.loading {
+    display: none;
+    font-size: 1.2em;
+    color: #007bff;
+    margin-top: 20px;
+}
+
+.radio-container {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #eee;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.radio-container:hover {
+    background-color: #ddd;
+}

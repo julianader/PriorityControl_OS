@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Process Priority Adjuster</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('custom_static', filename='main.css') }}">
+    <script>
+        async function fetchProcesses(searchQuery = '') {
+            document.getElementById('loading').style.display = 'block';
+            const response = await fetch('/processes');
+            const processes = await response.json();
+            const processList = document.getElementById('process-list');
+            processList.innerHTML = '';
+
+            processes.forEach(proc => {
+                if (!searchQuery || proc.name.toLowerCase().includes(searchQuery.toLowerCase())) {
+                    const option = document.createElement('div');
+                    option.classList.add('process-item');
+                    option.innerHTML = `PID: ${proc.pid} | Name: ${proc.name} | Username: ${proc.username} | Status: ${proc.status} | Nice Value: ${proc.nice} | CPU Percent: ${proc.cpu_percent}`;
+                    processList.appendChild(option);
+                }
+            });
+
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        async function changePriority() {
+            const selectedProcess = document.querySelector('.process-item.selected');
+            if (!selectedProcess) {
+                alert('Please select a process.');
+                return;
+            }
+            const pid = selectedProcess.dataset.pid;
+            const priority = document.querySelector('input[name="priority"]:checked').value;
+            const response = await fetch('/set_priority', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pid: parseInt(pid), priority: parseInt(priority) })
+            });
+            const result = await response.json();
+            alert(result.message);
+            fetchProcesses();
+        }
+
+        function performSearch() {
+            const searchQuery = document.getElementById('search-input').value;
+            fetchProcesses(searchQuery);
+        }
+
+        function selectProcess(event) {
+            const selectedProcess = document.querySelector('.process-item.selected');
+            if (selectedProcess) {
+                selectedProcess.classList.remove('selected');
+            }
+            event.currentTarget.classList.add('selected');
+        }
+
+        window.onload = () => {
+            fetchProcesses();
+            document.getElementById('process-list').addEventListener('click', (event) => {
+                if (event.target.classList.contains('process-item')) {
+                    selectProcess(event);
+                }
+            });
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Process Priority Adjuster</h1>
+        <div class="controls">
+            <input type="text" id="search-input" placeholder="Search for a process..." />
+            <button class="btn" onclick="performSearch()">Search</button>
+            <button class="btn" onclick="fetchProcesses()">Refresh Processes</button>
+            <div id="process-list" class="process-list"></div>
+            <br>
+            <label>Priority:</label>
+            <div>
+                <label class="radio-container"><input type="radio" name="priority" value="20"> Idle</label>
+                <label class="radio-container"><input type="radio" name="priority" value="10"> Below Normal</label>
+                <label class="radio-container"><input type="radio" name="priority" value="0"> Normal</label>
+                <label class="radio-container"><input type="radio" name="priority" value="-5"> Above Normal</label>
+                <label class="radio-container"><input type="radio" name="priority" value="-10"> High</label>
+                <label class="radio-container"><input type="radio" name="priority" value="-20"> Realtime</label>
+            </div>
+            <button class="btn" onclick="changePriority()">Change Priority</button>
+        </div>
+        <div id="loading" class="loading">Loading...</div>
+    </div>
+</body>
+</html>
